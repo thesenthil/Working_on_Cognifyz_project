@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registered Users</title>
+</head>
+<body style="padding: 30px; font-family: Arial; background-color: #eef;">
+
+  <h2>All Registered Users</h2>
+  <table border="1" cellpadding="8" style="border-collapse: collapse;" id="userTable">
+    <thead>
+      <tr style="background-color: #ccc;">
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Age</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <br>
+  <a href="index.html">Back to Registration</a>
+
+  <script>
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const tbody = document.querySelector("#userTable tbody");
+
+    if (users.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='4'>No users registered yet.</td></tr>";
+    } else {
+      users.forEach((user, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td>${user.age}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a href="#register" class="route">Register</a>
+    <a href="#success" class="route">Success</a>
+  </nav>
+
+  <div id="app">
+    <!-- Registration Form -->
+    <section id="register-page">
+      <h2>User Registration</h2>
+      <form id="registration-form">
+        <label>Name:
+          <input type="text" id="name" required>
+        </label>
+
+        <label>Email:
+          <input type="email" id="email" required>
+        </label>
+
+        <label>Password:
+          <input type="password" id="password" required>
+          <small id="pass-strength"></small>
+        </label>
+
+        <label>Confirm Password:
+          <input type="password" id="confirm-password" required>
+        </label>
+
+        <button type="submit">Register</button>
+        <div id="error-msg"></div>
+      </form>
+    </section>
+
+    <!-- Success Page -->
+    <section id="success-page" class="hidden">
+      <h2>🎉 Registration Successful!</h2>
+      <p>Welcome <span id="user-name"></span>!</p>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

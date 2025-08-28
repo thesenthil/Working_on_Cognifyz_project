@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Full CRUD API Example</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    form { margin-bottom: 20px; }
+    input, button { margin: 5px; }
+    li { margin: 5px 0; }
+    .edit-btn, .delete-btn { margin-left: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>User Management</h1>
+  
+  <form id="userForm">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <button type="submit">Add User</button>
+  </form>
+
+  <h2>Users List</h2>
+  <ul id="userList"></ul>
+
+  <script>
+    const apiURL = "http://localhost:3000/api/users";
+    let editingUserId = null;
+
+    // Fetch & display users
+    async function fetchUsers() {
+      const res = await fetch(apiURL);
+      const data = await res.json();
+      const list = document.getElementById("userList");
+      list.innerHTML = "";
+      data.forEach(user => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${user.name} (${user.email})
+          <button class="edit-btn" onclick="editUser(${user.id}, '${user.name}', '${user.email}')">Edit</button>
+          <button class="delete-btn" onclick="deleteUser(${user.id})">Delete</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    // Add or update user
+    document.getElementById("userForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+
+      if (editingUserId) {
+        // UPDATE
+        await fetch(`${apiURL}/${editingUserId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email })
+        });
+        editingUserId = null;
+        document.querySelector("button[type=submit]").textContent = "Add User";
+      } else {
+        // CREATE
+        await fetch(apiURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email })
+        });
+      }
+
+      document.getElementById("name").value = "";
+      document.getElementById("email").value = "";
+      fetchUsers();
+    });
+
+    // Edit user
+    function editUser(id, name, email) {
+      document.getElementById("name").value = name;
+      document.getElementById("email").value = email;
+      editingUserId = id;
+      document.querySelector("button[type=submit]").textContent = "Update User";
+    }
+
+    // Delete user
+    async function deleteUser(id) {
+      await fetch(`${apiURL}/${id}`, { method: "DELETE" });
+      fetchUsers();
+    }
+
+    fetchUsers();
+  </script>
+</body>
+</html>
